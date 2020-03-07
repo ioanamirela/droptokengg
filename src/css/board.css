@@ -1,0 +1,79 @@
+table {
+    margin: 3em auto 0;
+    border-spacing: 0px 0px;
+}
+
+.bb8-sm{
+    width: 30px;
+    position: relative;
+    top: -0.5rem;
+    left: 1rem
+}
+.cell {
+    height: 7em;
+    width: 7em;
+    background-color: #D8D8D8;
+    display: flex;
+    flex-direction: row;
+    justify-content: center;
+    align-items: center;
+    cursor: pointer;
+}
+
+.token{
+    height: 5em;
+    width: 5em;
+    border-radius: 5em;
+
+}
+
+
+.gray {
+    background-color: #D8D8D8;
+    box-shadow: inset -3px -3px 7px #ffffffb0, inset 3px 3px 5px rgba(94, 104, 121, 0.692);
+
+}
+
+.red, .blue{
+    animation-name: fall-animation;
+    animation-duration: 400ms;
+    box-shadow: inset -3px -3px 7px #ffffffb0, inset 3px 3px 5px rgba(94, 104, 121, 0.692);
+}
+
+.red {
+    background-color: #BE2828;
+
+}
+
+.blue {
+    background-color: #5C8EDC;
+}
+
+
+.btn-toolbar {
+    padding: 1rem 0 0 0;
+}
+
+.modal-content{
+    width: 30rem;
+    margin: 1rem auto;
+}
+
+.alert{
+    position: absolute;
+    top: 0;
+    right: 0;
+    margin: 1em
+}
+
+
+@keyframes fall-animation {
+    from {
+        -webkit-transform: translateY(-30rem);
+        transform: translateY(-30rem);
+    }
+    to {
+        -webkit-transform: translateY(0);
+        transform: translateY(0);
+    }
+}
