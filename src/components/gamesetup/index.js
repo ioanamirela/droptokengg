@@ -19,7 +19,7 @@ class GameSetup extends Component {
   }
 
   bb8(){
-    this.setState({roll : true});
+    this.setState({roll : true})
     setTimeout(() => {
       this.props.updateState(true, true)
     }, 1000)

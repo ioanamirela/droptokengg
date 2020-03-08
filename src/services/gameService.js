@@ -15,7 +15,6 @@ class MoveService {
    * Initialize arrays that keep track of row and column sums
    */
   initSumArrays(){
-
        for(let i=0; i<NUM_COLS; i++){
          this.colSum[i] = 0
       }

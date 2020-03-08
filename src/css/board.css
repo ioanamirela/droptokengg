@@ -1,18 +1,18 @@
 table {
     margin: 3em auto 0;
-    border-spacing: 0px 0px;
+    border-spacing: 0;
 }
 
 .bb8-sm{
-    width: 30px;
+    width: 1em;
     position: relative;
     top: -0.5rem;
     left: 1rem;
     filter: drop-shadow(2px 2px 2px #8B9295)
 }
 .cell {
-    height: 7em;
-    width: 7em;
+    height: 4em;
+    width: 4em;
     background-color: #D8D8D8;
     display: flex;
     flex-direction: row;
@@ -22,9 +22,9 @@ table {
 }
 
 .token{
-    height: 5em;
-    width: 5em;
-    border-radius: 5em;
+    height: 3em;
+    width: 3em;
+    border-radius: 4em;
 
 }
 
@@ -56,15 +56,20 @@ table {
 }
 
 .modal-content{
-    width: 30rem;
-    margin: 1rem auto;
+    width: 20rem;
+    margin: 0 auto;
+    font-size: 0.75rem;
 }
 
+.modal-footer{
+    padding: 0
+}
 .alert{
     position: absolute;
     top: 0;
     right: 0;
-    margin: 1em
+    margin: 1em;
+    font-size: 0.75rem;
 }
 
 

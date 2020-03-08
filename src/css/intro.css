@@ -12,17 +12,18 @@
 }
 .btn{
     margin-right: 0.5rem;
+    font-size: 0.75rem;
 }
 
 h2 {
     border-bottom: 1px solid #ccc;
     padding: 1rem;
     margin: 0;
-
+    font-size: 1.2rem;
     text-align: center;
 }
 .bb8-lg{
-    width: 100px;
+    width: 4em;
     margin: 1em 0;
     filter: drop-shadow(-5px 5px 5px #8B9295)
 }

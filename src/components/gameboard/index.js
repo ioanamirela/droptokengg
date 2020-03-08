@@ -17,8 +17,6 @@ class Board extends Component {
   constructor(props) {
     super(props)
 
-    this.gameService = new GameService()
-
     this.state = {
       botFirst: props.botFirst,
       player1: 1,
@@ -37,10 +35,13 @@ class Board extends Component {
     // Bind play function to Board component
     this.play = this.play.bind(this)
 
-
+    this.gameService = new GameService()
   }
 
-  // Initialize board for new game
+  /**
+   * Initialize board for new game
+   * @returns {Promise<void>}
+   */
   async init() {
     // create empty matrix
     let board = []
@@ -65,14 +66,26 @@ class Board extends Component {
     }
   }
 
-  togglePlayer() {
+  /**
+   * Switch current player
+   * @returns {*}
+   */
+  switchPlayer() {
     return (this.state.currentPlayer === this.state.player1) ? this.state.player2 : this.state.player1
   }
 
+  /**
+   * Get bot move from service
+   * @returns {Promise<any|number>}
+   */
   async botMove(){
     return await this.gameService.retrieveBotMove(this.state.moves)
   }
 
+  /**
+   * Update state with message for player
+   * @param player
+   */
   setMessage(player){
     let message = 'It\'s a draw! Try again.'
     if (player > 0){
@@ -84,6 +97,11 @@ class Board extends Component {
 
   }
 
+  /**
+   * Play game
+   * @param c
+   * @returns {Promise<void>}
+   */
   async play(c) {
     await this.setState({
       moves: [...this.state.moves, c],
@@ -132,7 +150,7 @@ class Board extends Component {
             } else {
               await this.setState({
                 board,
-                currentPlayer: this.togglePlayer()
+                currentPlayer: this.switchPlayer()
               })
               await this.sleep(500)
               await this.play(move)
@@ -142,15 +160,21 @@ class Board extends Component {
       }
 
       if (this.state.currentPlayer === this.state.bot) {
-        this.setState({board, currentPlayer: this.togglePlayer()})
+        this.setState({board, currentPlayer: this.switchPlayer()})
       }
 
     }
   }
 
+  /**
+   * Sleep for ms time
+   * @param ms
+   * @returns {Promise<unknown>}
+   */
    sleep(ms) {
     return new Promise(resolve => setTimeout(resolve, ms))
   }
+
 
   componentDidMount() {
     this.init()
