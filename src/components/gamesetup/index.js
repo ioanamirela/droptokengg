@@ -28,7 +28,7 @@ class GameSetup extends Component {
   render() {
 
     return (
-      <div id="modal">
+      <div id="intro">
         <h2>Challenge BB-8 to a game of Drop Token!</h2>
         <div className="content">
           <img src={bb8} alt="BB-8" className={this.state.roll ? 'bb8-lg slide-right' : 'bb8-lg'} />

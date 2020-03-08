@@ -7,7 +7,8 @@ table {
     width: 30px;
     position: relative;
     top: -0.5rem;
-    left: 1rem
+    left: 1rem;
+    filter: drop-shadow(2px 2px 2px #8B9295)
 }
 .cell {
     height: 7em;

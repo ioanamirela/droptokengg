@@ -6,9 +6,10 @@ import ButtonToolbar from 'react-bootstrap/ButtonToolbar'
 import Modal from 'react-bootstrap/Modal'
 import Alert from 'react-bootstrap/Alert'
 
+import Row from './row'
 import bb8 from '../../images/bb8.png'
 
-import { NUM_ROWS, NUM_COLS } from '../../utils/const'
+import { NUM_ROWS, NUM_COLS, WIN_CONDITION } from '../../utils/const'
 
 
 class Board extends Component {
@@ -21,8 +22,8 @@ class Board extends Component {
     this.state = {
       botFirst: props.botFirst,
       player1: 1,
-      player2: 2,
-      bot: props.botFirst ? 1 : 2,
+      player2: WIN_CONDITION + 1,
+      bot: props.botFirst ? 1 : WIN_CONDITION + 1,
       currentPlayer: null,
       rows: NUM_ROWS,
       cols: NUM_COLS,
@@ -75,7 +76,7 @@ class Board extends Component {
   setMessage(player){
     let message = 'It\'s a draw! Try again.'
     if (player > 0){
-      message = (player === this.state.bot) ? 'Bot wins this round. Try again!' : 'Congratulations! You won!'
+      message = (player === this.state.bot) ? 'BB-8 wins this round. Try again!' : 'Congratulations! You won!'
     }
     setTimeout(() => {
       this.setState({ message })
@@ -84,7 +85,6 @@ class Board extends Component {
   }
 
   async play(c) {
-
     await this.setState({
       moves: [...this.state.moves, c],
       invalidMove: false
@@ -96,12 +96,13 @@ class Board extends Component {
       for (let r = this.state.rows-1; r >= 0; r--) {
         if (!board[r][c]) {
           board[r][c] = this.state.currentPlayer
+          await this.gameService.addMove(r, c, this.state.currentPlayer)
           break
         }
       }
 
       // Check status of board
-      let result = this.gameService.checkWinCondition(board)
+      let result = this.gameService.checkWinCondition(this.state.moves.length)
       if (result === this.state.player1) {
 
         this.setState({ board, gameOver: true })
@@ -164,17 +165,16 @@ class Board extends Component {
             centered>
             <Modal.Header>{this.state.message}</Modal.Header>
             <Modal.Footer>
-              <Button variant="success" onClick={() => this.props.updateState(false, false)}>Close</Button>
+              <Button variant="success" onClick={() => this.props.updateState(false, false)}>Play!</Button>
             </Modal.Footer>
           </Modal>
 
         <div className="content">
           <h2>Drop Token GG<img src={bb8} alt="BB-8" className="bb8-sm" /></h2>
+
           <table>
-            <thead>
-            </thead>
             <tbody>
-                {this.state.board.map((row, i) => (<Row key={i} row={row} play={this.play} />))}
+                {this.state.board.map((row, i) => (<Row key={i} row={row} play={this.play} player1={this.state.player1} player2={this.state.player2} />))}
             </tbody>
           </table>
         </div>
@@ -190,31 +190,5 @@ class Board extends Component {
   }
 }
 
-
-// Row component
-const Row = ({ row, play }) => {
-  return (
-    <tr>
-      {row.map((cell, i) => <Cell key={i} value={cell} columnIndex={i} play={play} />)}
-    </tr>
-  )
-}
-
-const Cell = ({ value, columnIndex, play }) => {
-  let color = 'gray'
-  if (value === 1) {
-    color = 'red'
-  } else if (value === 2) {
-    color = 'blue'
-  }
-
-  return (
-    <td>
-      <div className="cell" onClick={() => {play(columnIndex)}}>
-        <div className={`token ${color}`}></div>
-      </div>
-    </td>
-  )
-}
 
 export default Board
