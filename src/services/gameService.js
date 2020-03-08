@@ -40,7 +40,7 @@ class MoveService {
           throw new Error(error)
         }
 
-        //new move will be last element in response array
+        //new move will be the last element in response array
         return data[data.length - 1]
       } catch(e) {
         console.log(e)
@@ -55,16 +55,16 @@ class MoveService {
    * @param player
    * @returns {Promise<void>}
    */
-    async addMove(r, c, player){
+    addMove(r, c, player){
       this.colSum[c] += player
       this.rowSum[r] += player
 
-      // diagonal from bottom left to top right: [0,3], [1,2], [2,1], [3,0]
+      // diagonal from bottom left to top right: e.g [0,3], [1,2], [2,1], [3,0]
       if (r + c === NUM_COLS-1) {
         this.diagLeftSum += player
       }
 
-      //diagonal from bottom right to top left: [0,0], [1,1], [2,2], [3,3]
+      //diagonal from bottom right to top left: e.g [0,0], [1,1], [2,2], [3,3]
       if (r === c) {
         this.diagRightSum += player
       }

@@ -11,15 +11,14 @@ class GameSetup extends Component {
     super(props)
 
     this.state = {
-      roll: false
+      animate: false
     }
 
     this.bb8 = this.bb8.bind(this)
-
   }
 
   bb8(){
-    this.setState({roll : true})
+    this.setState({animate : true})
     setTimeout(() => {
       this.props.updateState(true, true)
     }, 1000)
@@ -31,7 +30,7 @@ class GameSetup extends Component {
       <div id="intro">
         <h2>Challenge BB-8 to a game of Drop Token!</h2>
         <div className="content">
-          <img src={bb8} alt="BB-8" className={this.state.roll ? 'bb8-lg slide-right' : 'bb8-lg'} />
+          <img src={bb8} alt="BB-8" className={this.state.animate ? 'bb8-lg slide-right' : 'bb8-lg'} />
           <ButtonToolbar>
             <Button variant="danger" onClick={() => this.props.updateState(false, true)}>Go first</Button>
             <Button variant="primary" onClick={this.bb8}>Let BB-8 go first</Button>

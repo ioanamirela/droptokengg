@@ -9,8 +9,7 @@ import Alert from 'react-bootstrap/Alert'
 import Row from './row'
 import bb8 from '../../images/bb8.png'
 
-import { NUM_ROWS, NUM_COLS, WIN_CONDITION } from '../../utils/const'
-
+import { NUM_ROWS, NUM_COLS, PLAYER1, PLAYER2 } from '../../utils/const'
 
 class Board extends Component {
 
@@ -19,9 +18,7 @@ class Board extends Component {
 
     this.state = {
       botFirst: props.botFirst,
-      player1: 1,
-      player2: WIN_CONDITION + 1,
-      bot: props.botFirst ? 1 : WIN_CONDITION + 1,
+      bot: props.botFirst ? PLAYER1 : PLAYER2,
       currentPlayer: null,
       rows: NUM_ROWS,
       cols: NUM_COLS,
@@ -55,7 +52,7 @@ class Board extends Component {
 
     this.setState({
       board,
-      currentPlayer: this.state.player1,
+      currentPlayer: PLAYER1,
       gameOver: false,
       message: ''
     })
@@ -71,7 +68,7 @@ class Board extends Component {
    * @returns {*}
    */
   switchPlayer() {
-    return (this.state.currentPlayer === this.state.player1) ? this.state.player2 : this.state.player1
+    return (this.state.currentPlayer === PLAYER1) ? PLAYER2 : PLAYER1
   }
 
   /**
@@ -98,46 +95,54 @@ class Board extends Component {
   }
 
   /**
+   * Adds new move to board or
+   * @param c
+   */
+   async handleNewMove(c){
+    let addedMove = false
+    let board = this.state.board
+    for (let r = this.state.rows - 1; r >= 0; r--) {
+      if (!board[r][c]) {
+        board[r][c] = this.state.currentPlayer
+        // update corresponding sum arrays
+        this.gameService.addMove(r, c, this.state.currentPlayer)
+        addedMove = true
+        break
+      }
+    }
+    if (!addedMove) {
+      this.setState({
+        board,
+        invalidMove: true
+      })
+    } else {
+      this.setState({
+        board,
+        moves: [...this.state.moves, c],
+        invalidMove: false
+      })
+    }
+  }
+
+  /**
    * Play game
    * @param c
    * @returns {Promise<void>}
    */
   async play(c) {
-    await this.setState({
-      moves: [...this.state.moves, c],
-      invalidMove: false
-    })
 
     if (!this.state.gameOver) {
-      // place token on board
-      let board = this.state.board
-      for (let r = this.state.rows-1; r >= 0; r--) {
-        if (!board[r][c]) {
-          board[r][c] = this.state.currentPlayer
-          await this.gameService.addMove(r, c, this.state.currentPlayer)
-          break
-        }
-      }
+      // Add move to board
+      await this.handleNewMove(c)
+      if (this.state.invalidMove)
+        return
 
       // Check status of board
       let result = this.gameService.checkWinCondition(this.state.moves.length)
-      if (result === this.state.player1) {
-
-        this.setState({ board, gameOver: true })
-        this.setMessage(this.state.player1)
-
-      } else if (result === this.state.player2) {
-
-        this.setState({ board, gameOver: true })
-        this.setMessage(this.state.player2)
-
-      } else if (result === 0) {
-
-        this.setState({ board, gameOver: true })
-        this.setMessage()
-
+      if (result != null){
+        this.setState({ gameOver: true })
+        this.setMessage(result)
       } else {
-
         // get computer move
         if (this.state.currentPlayer !== this.state.bot){
             let move = await this.botMove()
@@ -148,10 +153,10 @@ class Board extends Component {
                 invalidMove: true
               })
             } else {
-              await this.setState({
-                board,
+              this.setState({
                 currentPlayer: this.switchPlayer()
               })
+              // make it seem like BB-8 is taking some time to think
               await this.sleep(500)
               await this.play(move)
             }
@@ -160,7 +165,7 @@ class Board extends Component {
       }
 
       if (this.state.currentPlayer === this.state.bot) {
-        this.setState({board, currentPlayer: this.switchPlayer()})
+        this.setState({currentPlayer: this.switchPlayer()})
       }
 
     }
@@ -198,7 +203,7 @@ class Board extends Component {
 
           <table>
             <tbody>
-                {this.state.board.map((row, i) => (<Row key={i} row={row} play={this.play} player1={this.state.player1} player2={this.state.player2} />))}
+                {this.state.board.map((row, i) => (<Row key={i} row={row} play={this.play}  />))}
             </tbody>
           </table>
         </div>

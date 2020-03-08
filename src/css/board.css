@@ -10,6 +10,7 @@ table {
     left: 1rem;
     filter: drop-shadow(2px 2px 2px #8B9295)
 }
+
 .cell {
     height: 4em;
     width: 4em;
@@ -21,35 +22,29 @@ table {
     cursor: pointer;
 }
 
-.token{
+.token, .gray, .red, .blue {
     height: 3em;
     width: 3em;
     border-radius: 4em;
-
+    box-shadow: inset -3px -3px 7px #ffffffb0, inset 3px 3px 5px rgba(94, 104, 121, 0.692);
 }
-
 
 .gray {
     background-color: #D8D8D8;
-    box-shadow: inset -3px -3px 7px #ffffffb0, inset 3px 3px 5px rgba(94, 104, 121, 0.692);
-
 }
 
 .red, .blue{
     animation-name: fall-animation;
     animation-duration: 400ms;
-    box-shadow: inset -3px -3px 7px #ffffffb0, inset 3px 3px 5px rgba(94, 104, 121, 0.692);
 }
 
 .red {
     background-color: #BE2828;
-
 }
 
 .blue {
     background-color: #5C8EDC;
 }
-
 
 .btn-toolbar {
     padding: 1rem 0 0 0;
