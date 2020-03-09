@@ -1,4 +1,4 @@
-import {WIN_CONDITION, BASE_URL, NUM_ROWS, NUM_COLS} from '../utils/const'
+import {WIN_CONDITION, BASE_URL, NUM_ROWS, NUM_COLS, PLAYER1, PLAYER2} from '../utils/const'
 
 class MoveService {
 
@@ -15,6 +15,7 @@ class MoveService {
    * Initialize arrays that keep track of row and column sums
    */
   initSumArrays(){
+
        for(let i=0; i<NUM_COLS; i++){
          this.colSum[i] = 0
       }
@@ -40,7 +41,7 @@ class MoveService {
           throw new Error(error)
         }
 
-        //new move will be the last element in response array
+        //new move will be last element in response array
         return data[data.length - 1]
       } catch(e) {
         console.log(e)
@@ -55,16 +56,16 @@ class MoveService {
    * @param player
    * @returns {Promise<void>}
    */
-    addMove(r, c, player){
+    async addMove(r, c, player){
       this.colSum[c] += player
       this.rowSum[r] += player
 
-      // diagonal from bottom left to top right: e.g [0,3], [1,2], [2,1], [3,0]
+      // diagonal from bottom left to top right: e.g. [0,3], [1,2], [2,1], [3,0]
       if (r + c === NUM_COLS-1) {
         this.diagLeftSum += player
       }
 
-      //diagonal from bottom right to top left: e.g [0,0], [1,1], [2,2], [3,3]
+      //diagonal from bottom right to top left: e.g. [0,0], [1,1], [2,2], [3,3]
       if (r === c) {
         this.diagRightSum += player
       }
@@ -90,7 +91,7 @@ class MoveService {
   checkColumn() {
      for (let c = 0; c < NUM_COLS; c++){
        let val = this.checkValue(this.colSum[c])
-       if (val === 1 || val === WIN_CONDITION+1)
+       if (val === PLAYER1 || val === PLAYER2)
          return val
      }
    }
@@ -102,7 +103,7 @@ class MoveService {
   checkRow() {
      for (let r = 0; r < NUM_ROWS; r++) {
        let val = this.checkValue(this.rowSum[r])
-       if (val === 1 || val === WIN_CONDITION+1)
+       if (val === PLAYER1 || val === PLAYER2)
          return val
      }
    }
@@ -117,9 +118,9 @@ class MoveService {
      let divisible = (value%WIN_CONDITION === 0)
 
      if (divisible && sum === 1)
-       return 1
+       return PLAYER1
      else if (divisible && sum === WIN_CONDITION+1)
-       return WIN_CONDITION+1
+       return PLAYER2
    }
 
   /**
