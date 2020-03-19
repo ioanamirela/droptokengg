@@ -26,7 +26,10 @@ class Board extends Component {
       moves: [],
       gameOver: false,
       invalidMove: false,
-      message: ''
+      message: '',
+      disableBoard: false,
+      tokenRow: null,
+      tokenCol: null
     }
 
     // Bind play function to Board component
@@ -50,7 +53,7 @@ class Board extends Component {
       board.push(row)
     }
 
-    this.setState({
+   this.setState({
       board,
       currentPlayer: PLAYER1,
       gameOver: false,
@@ -58,7 +61,7 @@ class Board extends Component {
     })
 
     if (this.state.botFirst){
-      let move = await this.botMove()
+      let move = await this.botMove(board)
       await this.play(move)
     }
   }
@@ -75,8 +78,8 @@ class Board extends Component {
    * Get bot move from service
    * @returns {Promise<any|number>}
    */
-  async botMove(){
-    return await this.gameService.retrieveBotMove(this.state.moves)
+  async botMove(board){
+    return await this.gameService.retrieveBotMove(board, this.state.moves)
   }
 
   /**
@@ -107,13 +110,15 @@ class Board extends Component {
         // update corresponding sum arrays
         this.gameService.addMove(r, c, this.state.currentPlayer)
         addedMove = true
+        this.setState({tokenRow: r, tokenCol: c})
         break
       }
     }
     if (!addedMove) {
       this.setState({
         board,
-        invalidMove: true
+        invalidMove: true,
+        disableBoard: false
       })
     } else {
       this.setState({
@@ -131,6 +136,8 @@ class Board extends Component {
    */
   async play(c) {
 
+    this.setState({disableBoard: true})
+
     if (!this.state.gameOver) {
       // Add move to board
       await this.handleNewMove(c)
@@ -138,14 +145,14 @@ class Board extends Component {
         return
 
       // Check status of board
-      let result = this.gameService.checkWinCondition(this.state.moves.length)
+      let result = this.gameService.checkWinCondition(this.state.tokenRow, this.state.tokenCol, this.state.moves.length)
       if (result != null){
         this.setState({ gameOver: true })
         this.setMessage(result)
       } else {
         // get computer move
         if (this.state.currentPlayer !== this.state.bot){
-            let move = await this.botMove()
+            let move = await this.botMove(this.state.board)
             if (move < 0){
               // remove last move made
               this.state.moves.pop()
@@ -168,6 +175,7 @@ class Board extends Component {
         this.setState({currentPlayer: this.switchPlayer()})
       }
 
+      this.setState({disableBoard: false})
     }
   }
 
@@ -203,7 +211,7 @@ class Board extends Component {
 
           <table>
             <tbody>
-                {this.state.board.map((row, i) => (<Row key={i} row={row} play={this.play}  />))}
+                {this.state.board.map((row, i) => (<Row key={i} row={row} play={this.play} disabled={this.state.disableBoard}  />))}
             </tbody>
           </table>
         </div>

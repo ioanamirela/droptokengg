@@ -11,7 +11,7 @@ table {
     filter: drop-shadow(2px 2px 2px #8B9295)
 }
 
-.cell {
+.cell, .cell-disabled {
     height: 4em;
     width: 4em;
     background-color: #D8D8D8;
@@ -20,6 +20,10 @@ table {
     justify-content: center;
     align-items: center;
     cursor: pointer;
+}
+
+.cell-disabled {
+    pointer-events: none;
 }
 
 .token, .gray, .red, .blue {

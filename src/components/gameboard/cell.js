@@ -13,7 +13,7 @@ class Cell extends Component {
 
     return (
       <td>
-        <div className="cell" onClick={() => {this.props.play(this.props.columnIndex)}}>
+        <div className={this.props.disabled ? "cell-disabled" : "cell"} onClick={() => {this.props.play(this.props.columnIndex)}}>
           <div className="token"><div className={`${color}`}></div> </div>
         </div>
       </td>

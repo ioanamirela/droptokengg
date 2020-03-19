@@ -1,4 +1,4 @@
-import {WIN_CONDITION, BASE_URL, NUM_ROWS, NUM_COLS, PLAYER1, PLAYER2} from '../utils/const'
+import {WIN_CONDITION, NUM_ROWS, NUM_COLS, PLAYER1, PLAYER2} from '../utils/const'
 
 class MoveService {
 
@@ -29,24 +29,21 @@ class MoveService {
    * @param moves
    * @returns {Promise<any|number>}
    */
-    async retrieveBotMove(moves) {
-      try {
-        let url = BASE_URL + `?moves=[${moves}]`
-        let response = await fetch(url)
-        let data = await response.json()
+    async retrieveBotMove(board, moves) {
+      let validMove = null
+      while (!validMove) {
+        let newMoveR = Math.floor(Math.random() * 4)
+        let newMoveC = Math.floor(Math.random() * 4)
 
-        if (!response.ok) {
-          // invalid set of moves
-          let error = (data && data.message) || response.statusText
-          throw new Error(error)
+        console.log(newMoveR, newMoveC)
+        console.log(board[newMoveR][newMoveC])
+        if (board[newMoveR] && !board[newMoveR][newMoveC]){
+          validMove = newMoveC
         }
 
-        //new move will be last element in response array
-        return data[data.length - 1]
-      } catch(e) {
-        console.log(e)
-        return -1
       }
+
+      return Promise.resolve(validMove)
     }
 
   /**
@@ -76,11 +73,11 @@ class MoveService {
    * @param movesNo
    * @returns {number|*}
    */
-    checkWinCondition(movesNo) {
-        return this.checkColumn()
+    checkWinCondition(r, c, movesNo) {
+        return this.checkColumn(c)
                || this.checkValue(this.diagLeftSum)
                || this.checkValue(this.diagRightSum)
-               || this.checkRow()
+               || this.checkRow(r)
                || this.checkDraw(movesNo)
      }
 
@@ -88,24 +85,20 @@ class MoveService {
    * Check column win condition
    * @returns {number|*}
    */
-  checkColumn() {
-     for (let c = 0; c < NUM_COLS; c++){
-       let val = this.checkValue(this.colSum[c])
-       if (val === PLAYER1 || val === PLAYER2)
-         return val
-     }
+  checkColumn(c) {
+     let val = this.checkValue(this.colSum[c])
+     if (val === PLAYER1 || val === PLAYER2)
+       return val
    }
 
   /**
    * Check row win condition
    * @returns {number|*}
    */
-  checkRow() {
-     for (let r = 0; r < NUM_ROWS; r++) {
-       let val = this.checkValue(this.rowSum[r])
-       if (val === PLAYER1 || val === PLAYER2)
-         return val
-     }
+  checkRow(r) {
+     let val = this.checkValue(this.rowSum[r])
+     if (val === PLAYER1 || val === PLAYER2)
+       return val
    }
 
   /**
